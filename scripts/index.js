@@ -44,7 +44,7 @@ let questions = [{
 }
 ]
 
-// allows the user to view the table
+// allows the user to view the table (employees must be added first in order to view that table)
 inquirer.prompt(questions)
     .then(answers => {
         const { table, action } = answers;
@@ -165,7 +165,7 @@ inquirer.prompt(questions)
                         {
                             name: "employeeToUpdate",
                             type: "input",
-                            message: "Please enther the employee ID that you would like to update."
+                            message: "Please enter the employee ID that you would like to update."
                         },
                         {
                             name: "columnToUpdate",
@@ -193,6 +193,35 @@ inquirer.prompt(questions)
                     break;
 
                 default:
+                    inquirer.prompt([
+                        {
+                            name: "roleToUpdate",
+                            type: "input",
+                            message: "Please enter the role ID that you would like to update."
+                        },
+                        {
+                            name: "columnToUpdate",
+                            type: "list",
+                            message: "What would you like to update?",
+                            choices: ['title', 'salary', 'department_id']
+                        },
+                        {
+                            name: "newValue",
+                            type: "input",
+                            message: "What would you like the new value to be?",
+                        }
+                    ]).then(response => {
+                        connection.query(`UPDATE ${table.toLowerCase()} SET ${response.columnToUpdate} = ? WHERE id = ? `,
+                            [
+                                response.newValue,
+                                response.roleToUpdate
+                            ],
+                            function (err, res) {
+                                if (err) throw err;
+                                console.log(res);
+                                connection.end();
+                            });
+                    })
                     break;
             }
         }

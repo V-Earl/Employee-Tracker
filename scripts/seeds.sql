@@ -37,13 +37,13 @@ CREATE TABLE employee(
 
 INSERT INTO department (dept_name)
 VALUES 
-    ('Shoes'),
-    ('Auto')
+    ('Global Technology'),
+    ('Commercial Banking');
 
 INSERT INTO role (title, salary, department_id)
 VALUES 
-    ('Cashier', 57000, 1),
-    ('Cashier', 57000, 2),
-    ('Manager', 70000, 1),
-    ('Manager', 70000, 2)
+    ('Business Analyst', 75000, 1),
+    ('Business Analyst', 80000, 2),
+    ('Manager', 95000, 1),
+    ('Manager', 95000, 2);
 
