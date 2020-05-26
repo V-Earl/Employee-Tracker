@@ -1,8 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
-
-
 const connection = mysql.createConnection({
     host: "localhost",
 
@@ -31,7 +29,7 @@ function afterConnection(queryString, object) {
     });
 }
 
-
+// starting questions...
 let questions = [{
     name: "action",
     type: "list",
@@ -46,6 +44,7 @@ let questions = [{
 }
 ]
 
+// allows the user to view the table
 inquirer.prompt(questions)
     .then(answers => {
         const { table, action } = answers;
@@ -56,6 +55,8 @@ inquirer.prompt(questions)
                 connection.end();
             });
         }
+
+        // allows the user to add a new employee
         else if (action === 'Add') {
 
             let additionalQuestions = []
@@ -99,6 +100,7 @@ inquirer.prompt(questions)
                                 });
                         })
                     break;
+                // allows user to add a new department
                 case 'Department':
                     inquirer.prompt({
                         name: "departmentName",
@@ -118,25 +120,26 @@ inquirer.prompt(questions)
                         })
                     break;
 
+                // allows the user to add a new role to the database
                 default:
                     inquirer.prompt([
                         {
-                        name: "roleTitle",
-                        type: "input",
-                        message: "What is the employee's title?"
-                    },
-                    {
-                        name: "salary",
-                        type: "input",
-                        message: "What is the employee's salary?"
-                    },
-                    {
-                        name: "deptId",
-                        type: "input",
-                        message: "What is the employee's department ID?"
-                    }
+                            name: "roleTitle",
+                            type: "input",
+                            message: "What is the employee's title?"
+                        },
+                        {
+                            name: "salary",
+                            type: "input",
+                            message: "What is the employee's salary?"
+                        },
+                        {
+                            name: "deptId",
+                            type: "input",
+                            message: "What is the employee's department ID?"
+                        }
 
-                ])
+                    ])
                         .then(response => {
                             connection.query(`INSERT INTO ${table.toLowerCase()} SET ? `,
                                 {
@@ -154,8 +157,8 @@ inquirer.prompt(questions)
                     break;
             }
 
-
-        } else{
+            // make updates
+        } else {
             switch (table) {
                 case 'Employee':
                     inquirer.prompt([
@@ -168,7 +171,7 @@ inquirer.prompt(questions)
                             name: "columnToUpdate",
                             type: "list",
                             message: "What would you like to update?",
-                            choices: ['first_name', 'last_name', 'role_id','manager_id']  
+                            choices: ['first_name', 'last_name', 'role_id', 'manager_id']
                         },
                         {
                             name: "newValue",
@@ -177,18 +180,18 @@ inquirer.prompt(questions)
                         }
                     ]).then(response => {
                         connection.query(`UPDATE ${table.toLowerCase()} SET ${response.columnToUpdate} = ? WHERE id = ? `,
-                                [
-                                    response.newValue,
-                                    response.employeeToUpdate
-                                ],
-                                function (err, res) {
-                                    if (err) throw err;
-                                    console.log(res);
-                                    connection.end();
-                                });
+                            [
+                                response.newValue,
+                                response.employeeToUpdate
+                            ],
+                            function (err, res) {
+                                if (err) throw err;
+                                console.log(res);
+                                connection.end();
+                            });
                     })
                     break;
-            
+
                 default:
                     break;
             }
